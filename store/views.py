@@ -55,13 +55,15 @@ def add_to_cart(request, id):
     cart = request.session.get('cart', {})
     product_id = str(id)
 
-    quantity = int(request.POST.get('quantity', 1))
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except ValueError:
+        quantity = 1
 
-    if product_id in cart:
-        cart[product_id] += quantity
-    else:
-        cart[product_id] = quantity
+    if quantity < 1:
+        quantity = 1
 
+    cart[product_id] = cart.get(product_id, 0) + quantity
     request.session['cart'] = cart
 
     return redirect('cart')
@@ -94,6 +96,10 @@ def cart(request):
 @login_required(login_url='login')
 def checkout(request):
     cart = request.session.get('cart', {})
+
+    if not cart:
+        return redirect('cart')
+
     products = Product.objects.filter(id__in=cart.keys())
 
     cart_items = []
@@ -130,22 +136,32 @@ def checkout(request):
                 quantity=item['quantity'],
                 price=item['product'].price,
             )
-            
+
+        order_products_text = ""
+        for item in cart_items:
+            order_products_text += f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
+
+        try:
             send_mail(
-    subject=f"Yeni Sipariş Geldi - #{order.id}",
-    message=f"""
+                subject=f"Yeni Sipariş Geldi - #{order.id}",
+                message=f"""
 Yeni bir sipariş oluşturuldu.
 
 Müşteri: {full_name}
 Telefon: {phone}
 Adres: {address}
 
+Ürünler:
+{order_products_text}
+
 Toplam Tutar: ₺{total}
 """,
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    recipient_list=[settings.ADMIN_ORDER_EMAIL],
-    fail_silently=False,
-)
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ADMIN_ORDER_EMAIL],
+                fail_silently=True,
+            )
+        except Exception as e:
+            print("Mail gönderilemedi:", e)
 
         request.session['cart'] = {}
         return redirect('order_success')
@@ -293,6 +309,7 @@ def add_product(request):
         return redirect('home')
 
     return render(request, 'store/add_product.html')
+
 
 def contact(request):
     return render(request, 'store/contact.html')
