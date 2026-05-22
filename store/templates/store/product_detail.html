@@ -50,25 +50,31 @@
                         Stokta var: {{ product.stock }}
                     </p>
 
-                    <div class="flex items-end gap-4 flex-wrap">
+                    <form method="POST"
+      action="{% url 'add_to_cart' product.id %}"
+      class="flex items-end gap-4 flex-wrap">
 
-<div class="mb-6">
-    <label class="block text-sm font-medium text-neutral-700 mb-3">
-        Adet
-    </label>
+    {% csrf_token %}
 
-    <input type="number"
-           name="quantity"
-           value="1"
-           min="1"
-           max="{{ product.stock }}"
-           class="w-28 border border-neutral-200 rounded-full px-5 py-3 outline-none">
-</div>
+    <div>
+        <label class="block text-sm font-medium text-neutral-700 mb-3">
+            Adet
+        </label>
 
-                        <a href="{% url 'add_to_cart' product.id %}"
-                           class="bg-black text-white px-10 py-5 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300"
-                            Sepete Ekle
-                        </a>
+        <input type="number"
+               name="quantity"
+               value="1"
+               min="1"
+               max="{{ product.stock }}"
+               class="w-28 border border-neutral-200 rounded-full px-5 py-3 outline-none">
+    </div>
+
+    <button type="submit"
+            class="bg-black text-white px-10 py-5 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300">
+        Sepete Ekle
+    </button>
+
+</form>
 
                         {% if user.is_authenticated %}
                             <a href="{% url 'toggle_favorite' product.id %}"
