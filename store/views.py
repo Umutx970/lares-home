@@ -139,16 +139,18 @@ def checkout(request):
 
         order_products_text = ""
         for item in cart_items:
-            order_products_text += (
-                f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
-            )
+            order_products_text += f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
 
-        if getattr(settings, "EMAIL_HOST_USER", "") and getattr(settings, "ADMIN_ORDER_EMAIL", ""):
-            try:
-                send_mail(
-                    subject=f"Yeni Sipariş Geldi - #{order.id}",
-                    message=f"""
-Yeni bir sipariş oluşturuldu.
+        try:
+            print("MAIL GONDERME BASLADI")
+            print("EMAIL_HOST_USER:", settings.EMAIL_HOST_USER)
+            print("ADMIN_ORDER_EMAIL:", settings.ADMIN_ORDER_EMAIL)
+            print("EMAIL_PASSWORD_EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
+
+            result = send_mail(
+                subject=f"Yeni Sipariş Geldi - #{order.id}",
+                message=f"""
+Yeni sipariş oluşturuldu.
 
 Müşteri: {full_name}
 Telefon: {phone}
@@ -159,12 +161,15 @@ Adres: {address}
 
 Toplam Tutar: ₺{total}
 """,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.ADMIN_ORDER_EMAIL],
-                    fail_silently=False,
-                )
-            except Exception as e:
-                print("Mail gönderilemedi:", e)
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ADMIN_ORDER_EMAIL],
+                fail_silently=False,
+            )
+
+            print("MAIL SONUC:", result)
+
+        except Exception as e:
+            print("MAIL HATASI:", e)
 
         request.session['cart'] = {}
         return redirect('order_success')
