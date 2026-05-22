@@ -5,6 +5,34 @@
 
 {% block content %}
 
+<div class="flex gap-8 px-8 py-10">
+
+    <!-- Sol filtre alanı -->
+    <aside class="w-64 bg-white border rounded-2xl p-5">
+        <h2 class="text-lg font-semibold mb-4">Kategoriler</h2>
+
+       <a href="{% url 'home' %}" class="block py-2">
+    Tüm Ürünler
+</a>
+
+{% for category in categories %}
+    <a href="?category={{ category.id }}" class="block py-2">
+        {{ category.name }}
+    </a>
+{% endfor %}
+    </aside>
+
+    <!-- Sağ ürün alanı -->
+    <section class="flex-1">
+        <h1 class="text-3xl font-bold mb-6">Ürünler</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- ürün kartları burada olacak -->
+        </div>
+    </section>
+
+</div>
+
 <!-- HERO -->
 
 <section class="relative min-h-screen overflow-hidden bg-[#f8f3ec] pt-24">
