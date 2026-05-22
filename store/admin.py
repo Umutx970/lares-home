@@ -1,14 +1,35 @@
 from django.contrib import admin
-from .models import Category, Product, Order, OrderItem, Review, Favorite
+from .models import *
 
 
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'discount_percent', 'is_new', 'is_featured', 'stock', 'is_active')
-    list_editable = ('discount_percent', 'is_new', 'is_featured', 'stock', 'is_active')
+
+    list_display = (
+        'name',
+        'brand',
+        'category',
+        'price',
+        'stock',
+        'supplier_name',
+        'is_active',
+    )
+
+    search_fields = (
+        'name',
+        'brand',
+        'sku',
+        'barcode',
+    )
+
+    list_filter = (
+        'category',
+        'brand',
+        'is_active',
+    )
 
 
 admin.site.register(Category)
-admin.site.register(Product, ProductAdmin)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Review)
