@@ -20,6 +20,13 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     is_new = models.BooleanField(default=True)
     discount_percent = models.IntegerField(default=0)
+    brand = models.CharField(max_length=100, blank=True)
+    sku = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    barcode = models.CharField(max_length=100, blank=True, null=True)
+    supplier_name = models.CharField(max_length=150, blank=True)
+    supplier_product_id = models.CharField(max_length=150, blank=True, null=True)
+    external_image_url = models.URLField(blank=True, null=True)
+    last_supplier_update = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name

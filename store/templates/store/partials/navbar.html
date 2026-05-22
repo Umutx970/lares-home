@@ -1,35 +1,87 @@
 {% load static %}
 
-<nav class="fixed top-0 left-0 w-full z-50 bg-[#111111] text-white border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-8 h-24 flex items-center justify-between">
+<nav class="fixed top-0 left-0 w-full z-50">
 
-        <a href="/" class="flex items-center">
-            <img src="{% static 'store/images/lares-logo.png' %}"
-     class="h-12 w-auto object-contain brightness-0 invert opacity-95">
-        </a>
+    <div class="max-w-7xl mx-auto px-6 pt-5">
 
-        <div class="hidden md:flex items-center gap-12">
-            <a href="/" class="text-[#c6a46c] border-b border-[#c6a46c] pb-2">Ana Sayfa</a>
-            <a href="/#products" class="hover:text-[#c6a46c] transition">Ürünler</a>
-            <a href="/#products" class="hover:text-[#c6a46c] transition">Kategoriler</a>
-            <a href="#" class="hover:text-[#c6a46c] transition">Hakkımızda</a>
-            <a href="{% url 'contact' %}" class="hover:text-[#c6a46c] transition">İletişim</a>
-        </div>
+        <div class="bg-white/75 backdrop-blur-2xl border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-full px-8 h-20 flex items-center justify-between">
 
-        <div class="flex items-center gap-5">
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="hover:text-[#c6a46c] transition">Çıkış</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="hover:text-[#c6a46c] transition">Giriş</a>
-            {% endif %}
-
-            <a href="{% url 'cart' %}" class="relative text-3xl">
-                🛒
-                <span class="absolute -top-3 -right-3 bg-[#c6a46c] text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                    {{ cart_count|default:0 }}
-                </span>
+            <!-- LOGO -->
+            <a href="/" class="flex items-center shrink-0">
+                <img src="{% static 'store/images/lares-logo.png' %}"
+                     class="h-11 w-auto object-contain opacity-95">
             </a>
+
+            <!-- MENU -->
+            <div class="hidden lg:flex items-center gap-10">
+
+                <a href="/"
+                   class="text-[15px] font-medium text-neutral-900 hover:text-[#c6a46c] transition duration-300">
+                    Ana Sayfa
+                </a>
+
+                <a href="/#products"
+                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                    Ürünler
+                </a>
+
+                <a href="/#products"
+                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                    Kategoriler
+                </a>
+
+                <a href="#"
+                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                    Hakkımızda
+                </a>
+
+                <a href="{% url 'contact' %}"
+                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                    İletişim
+                </a>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="flex items-center gap-5">
+
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'my_orders' %}"
+                       class="hidden md:block text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                        Siparişlerim
+                    </a>
+
+                    <a href="{% url 'logout' %}"
+                       class="text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                        Çıkış
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}"
+                       class="text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                        Giriş
+                    </a>
+
+                {% endif %}
+
+                <!-- CART -->
+                <a href="{% url 'cart' %}"
+                   class="relative w-12 h-12 rounded-full bg-black text-white flex items-center justify-center text-lg hover:bg-[#c6a46c] transition duration-300">
+
+                    🛒
+
+                    <span class="absolute -top-1 -right-1 bg-[#c6a46c] text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                        {{ cart_count|default:0 }}
+                    </span>
+
+                </a>
+
+            </div>
+
         </div>
 
     </div>
+
 </nav>
