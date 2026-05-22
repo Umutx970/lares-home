@@ -1,0 +1,57 @@
+{% extends 'store/base.html' %}
+
+{% block title %}
+Dashboard | Lares Home
+{% endblock %}
+
+{% block content %}
+
+<main class="max-w-7xl mx-auto px-6 py-16">
+
+    <h1 class="text-4xl font-bold mb-10">
+        Admin Dashboard
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+            <p class="text-neutral-500">Ürün Sayısı</p>
+            <h2 class="text-4xl font-bold">{{ total_products }}</h2>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+            <p class="text-neutral-500">Sipariş Sayısı</p>
+            <h2 class="text-4xl font-bold">{{ total_orders }}</h2>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+            <p class="text-neutral-500">Kullanıcı Sayısı</p>
+            <h2 class="text-4xl font-bold">{{ total_users }}</h2>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+            <p class="text-neutral-500">Toplam Ciro</p>
+            <h2 class="text-4xl font-bold">${{ total_revenue }}</h2>
+        </div>
+
+    </div>
+
+    <div class="bg-white rounded-3xl p-8 shadow-sm">
+        <h2 class="text-2xl font-bold mb-6">Son Siparişler</h2>
+
+        {% for order in latest_orders %}
+            <div class="flex justify-between border-b py-4">
+                <div>
+                    <strong>Sipariş #{{ order.id }}</strong>
+                    <p class="text-neutral-500">{{ order.full_name }} - {{ order.phone }}</p>
+                </div>
+                <strong>${{ order.total_price }}</strong>
+            </div>
+        {% empty %}
+            <p>Henüz sipariş yok.</p>
+        {% endfor %}
+    </div>
+
+</main>
+
+{% endblock %}

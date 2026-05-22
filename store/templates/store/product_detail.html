@@ -1,0 +1,161 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.name }} | Lares Home{% endblock %}
+
+{% block content %}
+
+<main class="bg-[#f8f6f3] pt-32 pb-24">
+
+    <section class="max-w-7xl mx-auto px-6">
+
+        <div class="bg-white rounded-[2rem] shadow-2xl border border-neutral-100 p-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+            <div class="bg-neutral-100 rounded-[2rem] overflow-hidden">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}"
+                         class="w-full h-[560px] object-cover">
+                {% else %}
+                    <div class="w-full h-[560px] flex items-center justify-center text-neutral-400 font-semibold">
+                        Ürün Görseli
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="flex flex-col justify-center">
+
+                <p class="text-neutral-500 mb-4">
+                    {{ product.category.name }}
+                </p>
+
+                <h1 class="text-5xl font-bold mb-5 text-neutral-900">
+                    {{ product.name }}
+                </h1>
+
+                {% if average_rating %}
+                    <div class="text-[#c6a46c] text-xl mb-6">
+                        ★ {{ average_rating|floatformat:1 }}/5
+                    </div>
+                {% endif %}
+
+                <p class="text-neutral-600 text-lg leading-relaxed mb-8">
+                    {{ product.description }}
+                </p>
+
+                <strong class="text-4xl font-black mb-8">
+                    ₺{{ product.price }}
+                </strong>
+
+                {% if product.stock > 0 %}
+                    <p class="text-green-700 mb-6">
+                        Stokta var: {{ product.stock }}
+                    </p>
+
+                    <div class="flex gap-4 flex-wrap">
+
+                        <a href="{% url 'add_to_cart' product.id %}"
+                           class="bg-black text-white px-8 py-4 rounded-full hover:bg-[#c6a46c] transition duration-300">
+                            Sepete Ekle
+                        </a>
+
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'toggle_favorite' product.id %}"
+                               class="border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
+                                ♡ Favorilere Ekle / Çıkar
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}"
+                               class="border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
+                                Favori için giriş yap
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                {% else %}
+
+                    <p class="text-red-600">
+                        Stokta yok
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="max-w-5xl mx-auto px-6 mt-20">
+
+        <h2 class="text-4xl font-bold mb-8">
+            Yorumlar
+        </h2>
+
+        {% if user.is_authenticated %}
+
+            <form method="POST"
+                  action="{% url 'add_review' product.id %}"
+                  class="bg-white rounded-[2rem] p-8 shadow-sm border border-neutral-100 mb-10">
+
+                {% csrf_token %}
+
+                <select name="rating"
+                        class="w-full border border-neutral-200 rounded-xl p-4 mb-4 outline-none">
+                    <option value="5">5 Yıldız</option>
+                    <option value="4">4 Yıldız</option>
+                    <option value="3">3 Yıldız</option>
+                    <option value="2">2 Yıldız</option>
+                    <option value="1">1 Yıldız</option>
+                </select>
+
+                <textarea name="comment"
+                          placeholder="Yorum yaz..."
+                          class="w-full border border-neutral-200 rounded-xl p-4 mb-4 h-32 outline-none"></textarea>
+
+                <button class="bg-black text-white px-8 py-4 rounded-full hover:bg-[#c6a46c] transition duration-300">
+                    Yorumu Gönder
+                </button>
+
+            </form>
+
+        {% endif %}
+
+        <div class="space-y-5">
+
+            {% for review in product.reviews.all %}
+
+                <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-neutral-100">
+
+                    <div class="flex justify-between mb-3">
+
+                        <strong>
+                            {{ review.user.username }}
+                        </strong>
+
+                        <span class="text-[#c6a46c]">
+                            ★ {{ review.rating }}/5
+                        </span>
+
+                    </div>
+
+                    <p class="text-neutral-600">
+                        {{ review.comment }}
+                    </p>
+
+                </div>
+
+            {% empty %}
+
+                <p class="text-neutral-500">
+                    Henüz yorum yok.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

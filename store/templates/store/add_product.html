@@ -1,0 +1,29 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Ürün Ekle | Lares Home{% endblock %}
+
+{% block content %}
+
+<main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold mb-8">Ürün Ekle</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-3xl p-8 shadow-sm">
+        {% csrf_token %}
+
+        <input name="name" placeholder="Ürün adı" class="w-full border rounded-xl p-4 mb-4" required>
+
+        <input name="price" type="number" step="0.01" placeholder="Fiyat" class="w-full border rounded-xl p-4 mb-4" required>
+
+        <textarea name="description" placeholder="Açıklama" class="w-full border rounded-xl p-4 mb-4" rows="4"></textarea>
+
+        <input name="stock" type="number" placeholder="Stok" class="w-full border rounded-xl p-4 mb-4" required>
+
+        <input name="image" type="file" class="w-full border rounded-xl p-4 mb-6">
+
+        <button class="bg-black text-white px-8 py-4 rounded-full">
+            Ürünü Kaydet
+        </button>
+    </form>
+</main>
+
+{% endblock %}

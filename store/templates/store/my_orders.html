@@ -1,0 +1,76 @@
+{% extends 'store/base.html' %}
+
+{% block title %}
+Siparişlerim | Lares Home
+{% endblock %}
+
+{% block content %}
+
+<main class="max-w-5xl mx-auto px-6 py-16">
+
+    <h1 class="text-4xl font-bold mb-8">
+        Siparişlerim
+    </h1>
+
+    {% if orders %}
+
+        <div class="space-y-6">
+
+            {% for order in orders %}
+
+                <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+                    <div class="flex justify-between mb-4">
+
+                        <div>
+                            <h2 class="text-2xl font-bold">
+                                Sipariş #{{ order.id }}
+                            </h2>
+
+                            <p class="text-neutral-500">
+                                {{ order.created_at }}
+                            </p>
+                        </div>
+
+                        <strong class="text-2xl">
+                            ${{ order.total_price }}
+                        </strong>
+
+                    </div>
+
+                    <div class="border-t pt-4 space-y-2">
+
+                        {% for item in order.items.all %}
+
+                            <div class="flex justify-between">
+
+                                <span>
+                                    {{ item.product.name }}
+                                    x {{ item.quantity }}
+                                </span>
+
+                                <span>
+                                    ${{ item.price }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>Henüz siparişiniz yok.</p>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}+

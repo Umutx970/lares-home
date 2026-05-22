@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Lares Home{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::selection {
+            background: #c6a46c;
+            color: white;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[#f8f6f3] text-neutral-900 antialiased">
+
+    {% include 'store/partials/navbar.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="bg-black text-white pt-24 pb-10 overflow-hidden">
+
+        <div class="max-w-7xl mx-auto px-6">
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-14 mb-20">
+
+                <div>
+                    <h2 class="text-3xl font-black mb-6">
+                        LARES HOME
+                    </h2>
+
+                    <p class="text-neutral-400 leading-relaxed">
+                        Premium elektronik, beyaz eşya, mobilya ve yaşam ürünleri.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-lg mb-6">
+                        Menü
+                    </h3>
+
+                    <div class="flex flex-col gap-4 text-neutral-400">
+                        <a href="/" class="hover:text-[#c6a46c] transition">
+                            Ana Sayfa
+                        </a>
+
+                        <a href="/#products" class="hover:text-[#c6a46c] transition">
+                            Ürünler
+                        </a>
+
+                        <a href="{% url 'contact' %}" class="hover:text-[#c6a46c] transition">
+                            İletişim
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-lg mb-6">
+                        Hesap
+                    </h3>
+
+                    <div class="flex flex-col gap-4 text-neutral-400">
+                        <a href="{% url 'login' %}" class="hover:text-[#c6a46c] transition">
+                            Giriş Yap
+                        </a>
+
+                        <a href="{% url 'register' %}" class="hover:text-[#c6a46c] transition">
+                            Kayıt Ol
+                        </a>
+
+                        <a href="{% url 'my_orders' %}" class="hover:text-[#c6a46c] transition">
+                            Siparişlerim
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-lg mb-6">
+                        İletişim
+                    </h3>
+
+                    <div class="flex flex-col gap-4 text-neutral-400">
+                        <p>info@lareshome.com</p>
+                        <p>+90 555 000 00 00</p>
+                        <p>Kıbrıs</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between gap-4 text-sm text-neutral-500">
+                <p>
+                    © 2026 Lares Home. Tüm hakları saklıdır.
+                </p>
+
+                <p>
+                    Premium E-Commerce Experience
+                </p>
+            </div>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
