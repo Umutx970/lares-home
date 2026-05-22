@@ -53,14 +53,24 @@
 
         </div>
 
-        <div class="relative flex items-center justify-center">
+<div class="relative hidden lg:block">
+    <div class="relative h-[620px] rounded-[2.5rem] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.18)]">
+        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop"
+             class="w-full h-full object-cover">
 
-            <div class="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-[0_20px_80px_rgba(0,0,0,0.15)] px-10 py-8 border border-white/50">
-                <img src="{% static 'store/images/lares-logo.png' %}"
-                     class="w-[320px] object-contain">
-            </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
 
+        <div class="absolute bottom-8 left-8 right-8 bg-white/85 backdrop-blur-xl rounded-3xl p-6">
+            <p class="text-xs tracking-[0.3em] text-[#c6a46c] mb-3">
+                LARES HOME
+            </p>
+
+            <h3 class="text-2xl font-semibold text-neutral-900">
+                Modern yaşam alanları için seçilmiş koleksiyonlar.
+            </h3>
         </div>
+    </div>
+</div>
 
     </div>
 
@@ -98,20 +108,7 @@
                         Kampanyayı İncele →
                     </a>
                 </div>
-
-                <div class="bg-white/10 backdrop-blur rounded-[1.5rem] p-10 text-left max-w-md ml-auto">
-                    <div class="text-[#c6a46c] text-sm tracking-[0.3em] mb-4">
-                        KAMPANYA DEVAM EDİYOR
-                    </div>
-
-                    <div class="text-white text-4xl font-black mb-3">
-                        Seçili Ürünlerde Özel Fırsatlar
-                    </div>
-
-                    <p class="text-neutral-300">
-                        İndirimli ürünleri keşfetmek için koleksiyona göz atın.
-                    </p>
-                </div>
+              
             </div>
         </div>
     </div>
@@ -156,27 +153,6 @@
             </select>
         </div>
 
-        
-
-        <!-- TABS -->
-        <div class="flex items-center gap-4 mb-10 flex-wrap">
-            <button class="bg-black text-white px-8 py-4 rounded-full shadow-lg shadow-black/20">
-                Çok Satanlar
-            </button>
-
-            <button class="bg-white px-8 py-4 rounded-full border border-neutral-200 hover:border-[#c6a46c] hover:text-[#c6a46c] transition">
-                Yeni Gelenler
-            </button>
-
-            <button class="bg-white px-8 py-4 rounded-full border border-neutral-200 hover:border-[#c6a46c] hover:text-[#c6a46c] transition">
-                Kampanyalı Ürünler
-            </button>
-
-            <button class="bg-white px-8 py-4 rounded-full border border-neutral-200 hover:border-[#c6a46c] hover:text-[#c6a46c] transition">
-                Öne Çıkanlar
-            </button>
-        </div>
-
         <!-- PRODUCTS GRID -->
         <div class="grid lg:grid-cols-[260px_1fr] gap-10">
 
@@ -208,7 +184,7 @@
     <!-- PRODUCTS -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for product in products %}
-                <div class="relative bg-white rounded-[1.8rem] overflow-hidden border border-neutral-100 shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)] transition duration-500 hover:-translate-y-2 group">
+                <div class="relative bg-white rounded-[1.8rem] overflow-hidden border border-neutral-100 shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)] transition duration-500 hover:-translate-y-1 group">
                     <div class="absolute top-0 left-0 w-0 h-[3px] bg-[#c6a46c] group-hover:w-full transition-all duration-500 z-30"></div>
 
                     <div class="relative h-80 overflow-hidden bg-[#f4f1eb]">
@@ -216,18 +192,11 @@
                             <div class="absolute top-5 left-5 z-20 bg-red-500 text-white text-xs px-4 py-2 rounded-full font-bold shadow-lg">
                                 %{{ product.discount_percent }} İNDİRİM
                             </div>
-                        {% elif product.is_new %}
-                            <div class="absolute top-5 left-5 z-20 bg-green-600 text-white text-xs px-4 py-2 rounded-full font-bold shadow-lg">
-                                YENİ
-                            </div>
-                        {% elif product.is_featured %}
-                            <div class="absolute top-5 left-5 z-20 bg-black text-white text-xs px-4 py-2 rounded-full font-bold shadow-lg">
-                                ÇOK SATAN
-                            </div>
+                    
                         {% endif %}
 
                         {% if product.image %}
-                            <img src="{% static 'store/products/karmen-sandikli-baza-set-63ca9-.webp' %}"
+                            <img src="{{ product.image.url }}"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         {% else %}
                             <div class="w-full h-full flex items-center justify-center bg-neutral-100 text-neutral-400 font-semibold">
@@ -245,7 +214,7 @@
 
                         <a href="{% url 'toggle_favorite' product.id %}"
                            class="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-lg hover:bg-[#c6a46c] hover:text-white transition">
-                            ♡
+                            ♥
                         </a>
 
                         <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-3 opacity-0 group-hover:opacity-100 transition duration-300 z-20">
@@ -261,7 +230,7 @@
                             {{ product.name }}
                         </h3>
 
-                        <p class="text-neutral-500 text-sm leading-relaxed mb-3 min-h-[40px]">
+                        <p class="text-neutral-500 text-sm mb-4 line-clamp-2">
                             {{ product.description }}
                         </p>
 
@@ -299,7 +268,7 @@
                             </div>
 
                             <a href="{% url 'product_detail' product.id %}"
-                               class="bg-black text-white px-6 py-3 rounded-full text-sm hover:bg-[#c6a46c] transition">
+                               class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#c6a46c] transition duration-300">
                                 İncele
                             </a>
                         </div>
@@ -313,100 +282,7 @@
     </div>
 </section>
 
-<!-- CATEGORY SHOWCASE -->
-<section class="py-24 bg-[#f8f6f3]">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-end justify-between mb-14">
-            <div>
-                <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-4">
-                    KOLEKSİYONLAR
-                </p>
 
-                <h2 class="text-5xl font-bold leading-tight">
-                    Yaşam alanınıza özel kategoriler.
-                </h2>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="group relative rounded-[2rem] overflow-hidden h-[420px]">
-                <img src="https://images.unsplash.com/photo-1586208958839-06c17cacdf08?q=80&w=1200&auto=format&fit=crop"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-
-                <div class="absolute bottom-8 left-8 text-white">
-                    <p class="text-sm tracking-[0.3em] mb-3">PREMIUM</p>
-                    <h3 class="text-3xl font-bold mb-4">Elektronik</h3>
-                    <a href="/?q=elektronik" class="text-sm border-b border-white pb-1">Koleksiyonu İncele</a>
-                </div>
-            </div>
-
-            <div class="group relative rounded-[2rem] overflow-hidden h-[420px]">
-                <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=1200&auto=format&fit=crop"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-
-                <div class="absolute bottom-8 left-8 text-white">
-                    <p class="text-sm tracking-[0.3em] mb-3">MODERN</p>
-                    <h3 class="text-3xl font-bold mb-4">Beyaz Eşya</h3>
-                    <a href="/?q=beyaz eşya" class="text-sm border-b border-white pb-1">Koleksiyonu İncele</a>
-                </div>
-            </div>
-
-            <div class="group relative rounded-[2rem] overflow-hidden h-[420px]">
-                <img src="https://images.unsplash.com/photo-1517705008128-361805f42e86?q=80&w=1200&auto=format&fit=crop"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-
-                <div class="absolute bottom-8 left-8 text-white">
-                    <p class="text-sm tracking-[0.3em] mb-3">HOME</p>
-                    <h3 class="text-3xl font-bold mb-4">Züccaciye</h3>
-                    <a href="/?q=züccaciye" class="text-sm border-b border-white pb-1">Koleksiyonu İncele</a>
-                </div>
-            </div>
-
-            <div class="group relative rounded-[2rem] overflow-hidden h-[420px]">
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-
-                <div class="absolute bottom-8 left-8 text-white">
-                    <p class="text-sm tracking-[0.3em] mb-3">DESIGN</p>
-                    <h3 class="text-3xl font-bold mb-4">Mobilya</h3>
-                    <a href="/?q=mobilya" class="text-sm border-b border-white pb-1">Koleksiyonu İncele</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- BRANDS -->
-<section class="py-20 bg-white overflow-hidden border-y border-neutral-200">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-14">
-            <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-4">
-                DÜNYACA ÜNLÜ MARKALAR
-            </p>
-
-            <h2 class="text-4xl font-bold">
-                Güvendiğiniz markalar tek yerde.
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10 items-center opacity-70">
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold">SAMSUNG</div>
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold">LG</div>
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold">FAKİR</div>
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold">ARÇELİK</div>
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold"></div>
-            <div class="bg-[#f8f6f3] rounded-3xl h-28 flex items-center justify-center text-2xl font-bold"></div>
-        </div>
-    </div>
-</section>
 
 <!-- FEATURED SHOWCASE -->
 <section class="py-24 bg-[#f8f6f3] overflow-hidden">
