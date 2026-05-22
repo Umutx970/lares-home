@@ -174,7 +174,7 @@ def checkout(request):
 
             resend.Emails.send({
                 "from": "onboarding@resend.dev",
-                "to": "umutkrt5488@gmail.com",
+                "to": "umut97068@gmail.com",
                 "subject": f"Yeni Sipariş - #{order.id}",
                 "html": html_content,
             })
