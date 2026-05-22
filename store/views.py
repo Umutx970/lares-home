@@ -53,7 +53,13 @@ def add_to_cart(request, id):
     cart = request.session.get('cart', {})
     product_id = str(id)
 
-    cart[product_id] = cart.get(product_id, 0) + 1
+    quantity = int(request.POST.get('quantity', 1))
+
+    if product_id in cart:
+        cart[product_id] += quantity
+    else:
+        cart[product_id] = quantity
+
     request.session['cart'] = cart
 
     return redirect('cart')

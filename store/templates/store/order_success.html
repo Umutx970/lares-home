@@ -1,32 +1,40 @@
 {% extends 'store/base.html' %}
 
-{% block title %}
-Sipariş Alındı | Lares Home
-{% endblock %}
+{% block title %}Sipariş Alındı | Lares Home{% endblock %}
 
 {% block content %}
 
-<main class="min-h-[70vh] flex items-center justify-center px-6">
+<main class="bg-[#f8f6f3] min-h-screen pt-32 pb-24 flex items-center justify-center px-6">
 
-    <div class="bg-white rounded-3xl p-10 shadow-sm text-center max-w-xl">
+    <div class="bg-white rounded-[2.5rem] p-12 md:p-16 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-neutral-100 text-center max-w-2xl">
 
-        <h1 class="text-4xl font-bold mb-4">
-            Siparişiniz Alındı
-        </h1>
+        <div class="w-20 h-20 rounded-full bg-[#c6a46c]/15 text-[#c6a46c] flex items-center justify-center mx-auto mb-8 text-4xl">
+            ✓
+        </div>
 
-        <p class="text-neutral-600 mb-8">
-
-            Siparişiniz başarıyla oluşturuldu.
-            En kısa sürede sizinle iletişime geçeceğiz.
-
+        <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-5">
+            SİPARİŞ TAMAMLANDI
         </p>
 
-        <a href="/"
-           class="bg-black text-white px-8 py-4 rounded-full inline-block">
+        <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-neutral-900">
+            Siparişiniz başarıyla alındı.
+        </h1>
 
-            Ana Sayfaya Dön
+        <p class="text-neutral-600 leading-8 mb-10">
+            Siparişiniz oluşturuldu. Ekibimiz en kısa sürede sizinle iletişime geçerek teslimat süreci hakkında bilgi verecek.
+        </p>
 
-        </a>
+        <div class="flex justify-center gap-4 flex-wrap">
+            <a href="/#products"
+               class="bg-black text-white px-8 py-4 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300">
+                Alışverişe Devam Et
+            </a>
+
+            <a href="{% url 'my_orders' %}"
+               class="border border-neutral-300 px-8 py-4 rounded-full text-sm tracking-wide hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
+                Siparişlerim
+            </a>
+        </div>
 
     </div>
 

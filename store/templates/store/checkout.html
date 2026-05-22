@@ -1,103 +1,114 @@
 {% extends 'store/base.html' %}
 
-{% block title %}
-Checkout | Lares Home
-{% endblock %}
+{% block title %}Checkout | Lares Home{% endblock %}
 
 {% block content %}
 
-<main class="max-w-5xl mx-auto px-6 py-16">
+<main class="bg-[#f8f6f3] pt-32 pb-24">
 
-    <h1 class="text-4xl font-bold mb-8">
-        Sipariş Bilgileri
-    </h1>
+    <section class="max-w-7xl mx-auto px-6">
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="mb-12">
+            <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-4">
+                GÜVENLİ ÖDEME
+            </p>
 
-        <form method="POST"
-              class="bg-white rounded-3xl p-8 shadow-sm">
+            <h1 class="text-5xl font-semibold tracking-tight">
+                Sipariş Bilgileri
+            </h1>
+        </div>
 
-            {% csrf_token %}
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10">
 
-            <label class="block mb-4">
+            <form method="POST"
+                  class="bg-white rounded-[2.5rem] p-10 shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-neutral-100">
 
-                <span class="block mb-2">
-                    Ad Soyad
-                </span>
+                {% csrf_token %}
 
-                <input name="full_name"
-                       required
-                       class="w-full border rounded-xl p-3">
-
-            </label>
-
-            <label class="block mb-4">
-
-                <span class="block mb-2">
-                    Telefon
-                </span>
-
-                <input name="phone"
-                       required
-                       class="w-full border rounded-xl p-3">
-
-            </label>
-
-            <label class="block mb-6">
-
-                <span class="block mb-2">
-                    Adres
-                </span>
-
-                <textarea name="address"
-                          required
-                          class="w-full border rounded-xl p-3"
-                          rows="5"></textarea>
-
-            </label>
-
-            <button type="submit"
-                    class="bg-black text-white px-8 py-4 rounded-full">
-
-                Siparişi Oluştur
-
-            </button>
-
-        </form>
-
-        <div class="bg-white rounded-3xl p-8 shadow-sm">
-
-            <h2 class="text-2xl font-bold mb-6">
-                Sepet Özeti
-            </h2>
-
-            {% for item in cart_items %}
-
-                <div class="flex justify-between border-b py-4">
-
-                    <span>
-                        {{ item.product.name }} x {{ item.quantity }}
+                <label class="block mb-6">
+                    <span class="block text-sm font-medium text-neutral-700 mb-3">
+                        Ad Soyad
                     </span>
 
-                    <strong>
-                        ${{ item.subtotal }}
-                    </strong>
+                    <input name="full_name"
+                           required
+                           class="w-full border border-neutral-200 rounded-2xl px-5 py-4 outline-none focus:border-[#c6a46c]">
+                </label>
 
+                <label class="block mb-6">
+                    <span class="block text-sm font-medium text-neutral-700 mb-3">
+                        Telefon
+                    </span>
+
+                    <input name="phone"
+                           required
+                           class="w-full border border-neutral-200 rounded-2xl px-5 py-4 outline-none focus:border-[#c6a46c]">
+                </label>
+
+                <label class="block mb-8">
+                    <span class="block text-sm font-medium text-neutral-700 mb-3">
+                        Teslimat Adresi
+                    </span>
+
+                    <textarea name="address"
+                              required
+                              rows="6"
+                              class="w-full border border-neutral-200 rounded-2xl px-5 py-4 outline-none focus:border-[#c6a46c]"></textarea>
+                </label>
+
+                <button type="submit"
+                        class="w-full bg-black text-white px-8 py-5 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300">
+                    Siparişi Tamamla
+                </button>
+
+            </form>
+
+            <aside class="bg-[#111111] text-white rounded-[2.5rem] p-10 h-fit sticky top-28 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+
+                <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-6">
+                    SİPARİŞ ÖZETİ
+                </p>
+
+                <div class="space-y-5 mb-8">
+                    {% for item in cart_items %}
+                        <div class="flex justify-between gap-6 border-b border-white/10 pb-5">
+                            <div>
+                                <p class="font-medium">
+                                    {{ item.product.name }}
+                                </p>
+
+                                <p class="text-sm text-neutral-400 mt-1">
+                                    Adet: {{ item.quantity }}
+                                </p>
+                            </div>
+
+                            <strong>
+                                ₺{{ item.subtotal }}
+                            </strong>
+                        </div>
+                    {% endfor %}
                 </div>
 
-            {% endfor %}
+                <div class="flex justify-between text-neutral-300 mb-4">
+                    <span>Ürün Toplamı</span>
+                    <span>₺{{ total }}</span>
+                </div>
 
-            <div class="flex justify-between mt-6 text-2xl font-bold">
+                <div class="flex justify-between text-neutral-300 mb-6">
+                    <span>Teslimat</span>
+                    <span>Ücretsiz</span>
+                </div>
 
-                <span>Toplam</span>
+                <div class="border-t border-white/10 pt-6 flex justify-between text-2xl font-semibold">
+                    <span>Toplam</span>
+                    <span>₺{{ total }}</span>
+                </div>
 
-                <span>${{ total }}</span>
-
-            </div>
+            </aside>
 
         </div>
 
-    </div>
+    </section>
 
 </main>
 

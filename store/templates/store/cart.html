@@ -26,7 +26,7 @@
 
                     {% for item in cart_items %}
 
-                        <div class="flex gap-6 items-center border-b border-neutral-100 py-6">
+                        <div class="flex gap-6 items-center border-b border-neutral-100 py-8">
 
                             <div class="w-28 h-28 rounded-2xl bg-[#f8f6f3] overflow-hidden flex-shrink-0">
                                 {% if item.product.image %}
@@ -41,7 +41,7 @@
 
                             <div class="flex-1">
 
-                                <h2 class="text-xl font-bold mb-2">
+                                <h2 class="text-[22px] font-semibold tracking-tight mb-2">         
                                     {{ item.product.name }}
                                 </h2>
 
@@ -52,7 +52,7 @@
                                 <div class="flex items-center gap-3">
 
                                     <a href="{% url 'decrease_cart' item.product.id %}"
-                                       class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center hover:bg-black hover:text-white transition">
+                                       class="w-10 h-10 rounded-full border border-neutral-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300">
                                         -
                                     </a>
 
@@ -90,7 +90,7 @@
 
                 </div>
 
-                <aside class="bg-black text-white rounded-[2rem] p-8 h-fit sticky top-28">
+                <aside class="bg-[#111111] text-white rounded-[2.5rem] p-10 h-fit sticky top-28 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
 
                     <p class="text-[#c6a46c] tracking-[0.3em] text-sm mb-5">
                         SİPARİŞ ÖZETİ
@@ -103,7 +103,7 @@
 
                     <div class="flex justify-between text-neutral-300 mb-6">
                         <span>Teslimat</span>
-                        <span>Sepette Hesaplanır</span>
+                        <span>Ücretsiz Teslimat</span>
                     </div>
 
                     <div class="border-t border-white/10 pt-6 flex justify-between text-2xl font-bold mb-8">
@@ -112,7 +112,7 @@
                     </div>
 
                     <a href="{% url 'checkout' %}"
-                       class="block text-center bg-[#c6a46c] text-white px-8 py-4 rounded-full hover:scale-105 transition duration-300">
+                       class="block text-center bg-[#c6a46c] text-white px-8 py-5 rounded-full text-sm tracking-wide hover:scale-[1.02] transition duration-300">
                         Ödemeye Geç
                     </a>
 
