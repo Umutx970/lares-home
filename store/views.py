@@ -161,7 +161,7 @@ Toplam Tutar: ₺{total}
 """,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[settings.ADMIN_ORDER_EMAIL],
-                    fail_silently=True,
+                    fail_silently=False,
                 )
             except Exception as e:
                 print("Mail gönderilemedi:", e)
