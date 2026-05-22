@@ -66,29 +66,7 @@
 
 </section>
 
-<div class="flex gap-8 px-8 py-10">
 
-    <!-- Sol filtre alanı -->
-    <aside class="w-64 bg-white border rounded-2xl p-5">
-        <h2 class="text-lg font-semibold mb-4">Kategoriler</h2>
-
-        <a href="#" class="block py-2">Mobilya</a>
-        <a href="#" class="block py-2">Baza</a>
-        <a href="#" class="block py-2">Başlık</a>
-        <a href="#" class="block py-2">Sandalye</a>
-        <a href="#" class="block py-2">Masa</a>
-    </aside>
-
-    <!-- Sağ ürün alanı -->
-    <section class="flex-1">
-        <h1 class="text-3xl font-bold mb-6">Ürünler</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- ürün kartları burada olacak -->
-        </div>
-    </section>
-
-</div>
 
 <!-- CAMPAIGN -->
 <section class="py-20 bg-[#f8f6f3]">
@@ -200,7 +178,35 @@
         </div>
 
         <!-- PRODUCTS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div class="grid lg:grid-cols-[260px_1fr] gap-10">
+
+    <!-- SIDEBAR -->
+    <aside class="bg-white p-6 rounded-[2rem] shadow h-fit sticky top-28">
+
+        <h3 class="text-xl font-bold mb-6">
+            Kategoriler
+        </h3>
+
+        <div class="flex flex-col gap-3">
+
+            <a href="/"
+               class="px-4 py-3 rounded-xl bg-black text-white">
+                Tüm Ürünler
+            </a>
+
+            {% for category in categories %}
+                <a href="/?category={{ category.id }}"
+                   class="px-4 py-3 rounded-xl border hover:bg-black hover:text-white transition">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+
+        </div>
+
+    </aside>
+
+    <!-- PRODUCTS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for product in products %}
                 <div class="relative bg-white rounded-[1.8rem] overflow-hidden border border-neutral-100 shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)] transition duration-500 hover:-translate-y-2 group">
                     <div class="absolute top-0 left-0 w-0 h-[3px] bg-[#c6a46c] group-hover:w-full transition-all duration-500 z-30"></div>
@@ -303,6 +309,7 @@
                 <p>Henüz ürün eklenmedi.</p>
             {% endfor %}
         </div>
+    </div>
     </div>
 </section>
 
