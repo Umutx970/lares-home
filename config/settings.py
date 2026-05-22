@@ -120,6 +120,7 @@ IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com"
 
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -130,3 +131,6 @@ EMAIL_HOST_PASSWORD = "ctrhhirbdamyjyhg"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMIN_ORDER_EMAIL = "umutkrt5488@gmail.com"
+import os
+
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
