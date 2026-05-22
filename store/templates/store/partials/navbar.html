@@ -1,9 +1,10 @@
+{% load static %}
 navbar.html
 <nav class="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-2xl border-b border-white/20 shadow-[0_5px_30px_rgba(0,0,0,0.04)]">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
         <a href="/" class="flex items-center">
-            <img src="/media/lares-logo.png" class="h-12 object-contain">
+            <img src="{% static 'store/images/lares-logo.png' %}" class="h-12 object-contain">
         </a>
 
         <div class="hidden md:flex items-center gap-10">
