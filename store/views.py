@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db.models import Avg
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -115,9 +117,9 @@ def checkout(request):
         })
 
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
+        full_name = request.POST.get('full_name', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        address = request.POST.get('address', '').strip()
 
         order = Order.objects.create(
             user=request.user,
@@ -134,6 +136,35 @@ def checkout(request):
                 quantity=item['quantity'],
                 price=item['product'].price,
             )
+
+        order_products_text = ""
+        for item in cart_items:
+            order_products_text += (
+                f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
+            )
+
+        if getattr(settings, "EMAIL_HOST_USER", "") and getattr(settings, "ADMIN_ORDER_EMAIL", ""):
+            try:
+                send_mail(
+                    subject=f"Yeni Sipariş Geldi - #{order.id}",
+                    message=f"""
+Yeni bir sipariş oluşturuldu.
+
+Müşteri: {full_name}
+Telefon: {phone}
+Adres: {address}
+
+Ürünler:
+{order_products_text}
+
+Toplam Tutar: ₺{total}
+""",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ADMIN_ORDER_EMAIL],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print("Mail gönderilemedi:", e)
 
         request.session['cart'] = {}
         return redirect('order_success')
