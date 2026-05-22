@@ -27,6 +27,17 @@ class Product(models.Model):
     supplier_product_id = models.CharField(max_length=150, blank=True, null=True)
     external_image_url = models.URLField(blank=True, null=True)
     last_supplier_update = models.DateTimeField(blank=True, null=True)
+    dimensions = models.CharField(max_length=200, blank=True)
+    material = models.CharField(max_length=200, blank=True)
+    fabric_type = models.CharField(max_length=200, blank=True)
+    color = models.CharField(max_length=100, blank=True)
+    warranty = models.CharField(max_length=100, blank=True)
+    delivery_time = models.CharField(max_length=100, blank=True)
+
+    has_storage = models.BooleanField(default=False)
+
+    features = models.TextField(blank=True)
+    technical_details = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
