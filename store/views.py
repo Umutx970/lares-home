@@ -1,5 +1,3 @@
-from django.core.mail import send_mail
-from django.conf import settings
 from django.db.models import Avg
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -136,32 +134,6 @@ def checkout(request):
                 quantity=item['quantity'],
                 price=item['product'].price,
             )
-
-        order_products_text = ""
-        for item in cart_items:
-            order_products_text += f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
-
-        try:
-            send_mail(
-                subject=f"Yeni Sipariş Geldi - #{order.id}",
-                message=f"""
-Yeni bir sipariş oluşturuldu.
-
-Müşteri: {full_name}
-Telefon: {phone}
-Adres: {address}
-
-Ürünler:
-{order_products_text}
-
-Toplam Tutar: ₺{total}
-""",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.ADMIN_ORDER_EMAIL],
-                fail_silently=True,
-            )
-        except Exception as e:
-            print("Mail gönderilemedi:", e)
 
         request.session['cart'] = {}
         return redirect('order_success')
