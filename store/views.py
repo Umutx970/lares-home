@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db.models import Avg
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -128,6 +130,22 @@ def checkout(request):
                 quantity=item['quantity'],
                 price=item['product'].price,
             )
+            
+            send_mail(
+    subject=f"Yeni Sipariş Geldi - #{order.id}",
+    message=f"""
+Yeni bir sipariş oluşturuldu.
+
+Müşteri: {full_name}
+Telefon: {phone}
+Adres: {address}
+
+Toplam Tutar: ₺{total}
+""",
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    recipient_list=[settings.ADMIN_ORDER_EMAIL],
+    fail_silently=False,
+)
 
         request.session['cart'] = {}
         return redirect('order_success')

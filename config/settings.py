@@ -127,3 +127,13 @@ IYZICO_SECRET_KEY = "sandbox-secret-key-buraya"
 IYZICO_BASE_URL = "https://sandbox-api.iyzipay.com"
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "umutkrt5488@gmail.com"
+EMAIL_HOST_PASSWORD = "shszhqhcqvejplow"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ADMIN_ORDER_EMAIL = "umutkrt5488@gmail.com"

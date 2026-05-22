@@ -1,0 +1,4 @@
+name,brand,sku,barcode,category,price,stock,description,image_url,supplier_name,supplier_product_id
+Modern Koltuk,Lares,LRS001,123456789,Mobilya,25999,5,Lüks modern koltuk,https://example.com/koltuk.jpg,TedarikçiA,SP001
+Akıllı TV,Samsung,SMS001,987654321,Elektronik,45999,3,4K Smart TV,https://example.com/tv.jpg,TedarikçiB,SP002
+Yemek Takımı,Karaca,KRC001,456789123,Mutfak,3499,12,Premium yemek takımı,https://example.com/yemek.jpg,TedarikçiC,SP003
