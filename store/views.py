@@ -1,4 +1,5 @@
-from django.core.mail import send_mail
+import resend
+
 from django.conf import settings
 from django.db.models import Avg
 from django.contrib.auth.models import User
@@ -137,39 +138,51 @@ def checkout(request):
                 price=item['product'].price,
             )
 
-        order_products_text = ""
-        for item in cart_items:
-            order_products_text += f"- {item['product'].name} x {item['quantity']} = ₺{item['subtotal']}\n"
-
         try:
-            print("MAIL GONDERME BASLADI")
-            print("EMAIL_HOST_USER:", settings.EMAIL_HOST_USER)
-            print("ADMIN_ORDER_EMAIL:", settings.ADMIN_ORDER_EMAIL)
-            print("EMAIL_PASSWORD_EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
+            resend.api_key = settings.RESEND_API_KEY
 
-            result = send_mail(
-                subject=f"Yeni Sipariş Geldi - #{order.id}",
-                message=f"""
-Yeni sipariş oluşturuldu.
+            html_content = f"""
+            <h2>Yeni Sipariş Geldi</h2>
 
-Müşteri: {full_name}
-Telefon: {phone}
-Adres: {address}
+            <p><strong>Sipariş No:</strong> #{order.id}</p>
+            <p><strong>Müşteri:</strong> {full_name}</p>
+            <p><strong>Telefon:</strong> {phone}</p>
+            <p><strong>Adres:</strong> {address}</p>
 
-Ürünler:
-{order_products_text}
+            <hr>
 
-Toplam Tutar: ₺{total}
-""",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.ADMIN_ORDER_EMAIL],
-                fail_silently=False,
-            )
+            <h3>Ürünler</h3>
+            <ul>
+            """
 
-            print("MAIL SONUC:", result)
+            for item in cart_items:
+                html_content += f"""
+                <li>
+                    {item['product'].name}
+                    x {item['quantity']}
+                    = ₺{item['subtotal']}
+                </li>
+                """
+
+            html_content += f"""
+            </ul>
+
+            <hr>
+
+            <h2>Toplam: ₺{total}</h2>
+            """
+
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": "umutkrt5488@gmail.com",
+                "subject": f"Yeni Sipariş - #{order.id}",
+                "html": html_content,
+            })
+
+            print("RESEND MAIL GONDERILDI")
 
         except Exception as e:
-            print("MAIL HATASI:", e)
+            print("RESEND HATASI:", e)
 
         request.session['cart'] = {}
         return redirect('order_success')
