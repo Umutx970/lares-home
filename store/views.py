@@ -6,9 +6,70 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login, logout
 
 from .models import Product, Category, Order, OrderItem, Review, Favorite
 
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if not username or not email or not password1 or not password2:
+            return render(request, 'store/register.html', {
+                'error': 'Tüm alanları doldurun.'
+            })
+
+        if password1 != password2:
+            return render(request, 'store/register.html', {
+                'error': 'Şifreler eşleşmiyor.'
+            })
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'store/register.html', {
+                'error': 'Bu kullanıcı adı zaten kullanılıyor.'
+            })
+
+        if User.objects.filter(email=email).exists():
+            return render(request, 'store/register.html', {
+                'error': 'Bu e-posta zaten kullanılıyor.'
+            })
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+
+        login(request, user)
+        return redirect('home')
+
+    return render(request, 'store/register.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+
+        return render(request, 'store/login.html', {
+            'error': 'Kullanıcı adı veya şifre hatalı.'
+        })
+
+    return render(request, 'store/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 def home(request):
     category_id = request.GET.get('category')
