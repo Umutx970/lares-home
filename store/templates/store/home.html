@@ -228,7 +228,7 @@
                             </div>
                         {% endif %}
 
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent opacity-70 group-hover:opacity-90 transition duration-700"></div>
 
                         <div class="absolute bottom-5 left-5 z-20">
                             <span class="bg-white/90 backdrop-blur text-black text-xs font-semibold px-4 py-2 rounded-full">
@@ -245,7 +245,7 @@
                     </div>
 
                     <div class="p-7">
-                        <h3 class="text-[20px] leading-snug font-semibold mb-3 text-neutral-900">
+                        <h3 class="text-[22px] leading-snug font-serif mb-3 text-neutral-900">
                             {{ product.name }}
                         </h3>
 
@@ -280,14 +280,14 @@
                                         ₺{{ product.discounted_price|floatformat:2 }}
                                     </strong>
                                 {% else %}
-                                    <strong class="text-2xl font-semibold tracking-tight">
+                                    <strong class="text-3xl font-light tracking-tight text-[#111111]">
                                         ₺{{ product.price }}
                                     </strong>
                                 {% endif %}
                             </div>
 
                             <a href="{% url 'product_detail' product.id %}"
-                               class="bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-[#c6a46c] transition duration-300">
+                               class="bg-black text-white px-7 py-3 rounded-full text-[13px] tracking-[0.18em] uppercase font-medium hover:bg-[#c6a46c] transition duration-500">
                                 İncele
                             </a>
                         </div>
