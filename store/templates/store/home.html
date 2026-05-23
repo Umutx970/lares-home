@@ -54,30 +54,45 @@
         </div>
 
 <div class="relative hidden lg:block">
-    <div class="relative h-[440px]">
 
-    <div class="grid grid-cols-2 gap-3 h-[440px]">
+    <div class="relative h-[440px] rounded-[32px] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.18)] bg-white/50 backdrop-blur">
 
-    <!-- LEFT -->
-    <div class="rounded-[32px] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.18)]">
-        <img src="{% static 'store/images/ChatGPT Image 23 May 2026 22_48_21.png' %}"
-             class="w-full h-full object-cover object-[48%]">
+        <div id="heroSlider"
+             class="flex h-full transition-transform duration-700 ease-in-out">
+
+            <!-- IMAGE 1 -->
+            <div class="min-w-full h-full flex items-center justify-center">
+                <img src="{% static 'store/images/ChatGPT Image 23 May 2026 22_48_21.png' %}"
+                     class="w-full h-full object-contain">
+            </div>
+
+            <!-- IMAGE 2 -->
+            <div class="min-w-full h-full flex items-center justify-center">
+                <img src="{% static 'store/images/ChatGPT Image 23 May 2026 22_58_33.png' %}"
+                     class="w-full h-full object-contain">
+            </div>
+
+            <!-- IMAGE 3 -->
+            <div class="min-w-full h-full flex items-center justify-center">
+                <img src="{% static 'store/images/ChatGPT Image 24 May 2026 00_21_27.png' %}"
+                     class="w-full h-full object-contain">
+            </div>
+
+        </div>
+
+        <!-- LEFT -->
+        <button onclick="prevSlide()"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 backdrop-blur shadow flex items-center justify-center text-2xl hover:bg-black hover:text-white transition duration-300 z-20">
+            ‹
+        </button>
+
+        <!-- RIGHT -->
+        <button onclick="nextSlide()"
+                class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 backdrop-blur shadow flex items-center justify-center text-2xl hover:bg-black hover:text-white transition duration-300 z-20">
+            ›
+        </button>
+
     </div>
-
-    <!-- RIGHT -->
-    <div class="rounded-[32px] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.18)]">
-        <img src="{% static 'store/images/ChatGPT Image 23 May 2026 22_58_33.png' %}"
-             class="w-full h-full object-cover object-center">
-    </div>
-
-</div>
-
-    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-
-</div>
-
-    <!-- OVERLAY -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
 
 </div>
 
@@ -475,6 +490,41 @@
     </div>
 </section>
 
+<script>
 
+    let currentSlide = 0;
+
+    const slider = document.getElementById("heroSlider");
+
+    const totalSlides = 3;
+
+    function updateSlider() {
+        slider.style.transform =
+            `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+
+        currentSlide++;
+
+        if(currentSlide >= totalSlides){
+            currentSlide = 0;
+        }
+
+        updateSlider();
+    }
+
+    function prevSlide() {
+
+        currentSlide--;
+
+        if(currentSlide < 0){
+            currentSlide = totalSlides - 1;
+        }
+
+        updateSlider();
+    }
+
+</script>
 
 {% endblock %}
