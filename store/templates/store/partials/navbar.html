@@ -16,27 +16,27 @@
             <div class="hidden lg:flex items-center gap-8">
 
                 <a href="/"
-                   class="text-[15px] font-medium text-neutral-900 hover:text-[#c6a46c] transition duration-300">
+                   class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-900 hover:text-[#a88a5b] transition duration-300">
                     Ana Sayfa
                 </a>
 
                 <a href="/#products"
-                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                   class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition duration-300">
                     Ürünler
                 </a>
 
                 <a href="/#products"
-                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                   class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition duration-300">
                     Kategoriler
                 </a>
 
                 <a href="#"
-                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                   class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition duration-300">
                     Hakkımızda
                 </a>
 
                 <a href="{% url 'contact' %}"
-                   class="text-[15px] font-medium text-neutral-700 hover:text-[#c6a46c] transition duration-300">
+                   class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition duration-300">
                     İletişim
                 </a>
 
@@ -48,19 +48,19 @@
                 {% if user.is_authenticated %}
 
                     <a href="{% url 'my_orders' %}"
-                       class="hidden md:block text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                       class="hidden md:block text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition">
                         Siparişlerim
                     </a>
 
                     <a href="{% url 'logout' %}"
-                       class="text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                       class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition">
                         Çıkış
                     </a>
 
                 {% else %}
 
                     <a href="{% url 'login' %}"
-                       class="text-sm text-neutral-700 hover:text-[#c6a46c] transition">
+                       class="text-[13px] tracking-[0.18em] uppercase font-medium text-neutral-700 hover:text-[#a88a5b] transition">
                         Giriş
                     </a>
 
@@ -72,7 +72,7 @@
 
                     🛒
 
-                    <span class="absolute -top-1 -right-1 bg-[#c6a46c] text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                    <span class="absolute -top-1 -right-1 bg-[#a88a5b] text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
                         {{ cart_count|default:0 }}
                     </span>
 
