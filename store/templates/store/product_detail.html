@@ -41,7 +41,7 @@
                     {{ product.description }}
                 </p>
 
-                <strong class="text-3xl font-semibold tracking-tight mb-10">
+                <strong class="text-3xl font-semibold tracking-tight mb-6">
                     ₺{{ product.price }}
                 </strong>
 
@@ -50,52 +50,113 @@
                         Stokta var: {{ product.stock }}
                     </p>
 
-                    <form method="POST"
-      action="{% url 'add_to_cart' product.id %}"
-      class="flex items-end gap-4 flex-wrap">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
 
-    {% csrf_token %}
+                        {% if product.dimensions %}
+                            <div class="bg-[#f8f6f3] rounded-2xl p-5">
+                                <p class="text-sm text-neutral-500 mb-1">Ölçü</p>
+                                <p class="font-semibold">{{ product.dimensions }}</p>
+                            </div>
+                        {% endif %}
 
-    <div>
-        <label class="block text-sm font-medium text-neutral-700 mb-3">
-            Adet
-        </label>
+                        {% if product.material %}
+                            <div class="bg-[#f8f6f3] rounded-2xl p-5">
+                                <p class="text-sm text-neutral-500 mb-1">Malzeme</p>
+                                <p class="font-semibold">{{ product.material }}</p>
+                            </div>
+                        {% endif %}
 
-        <input type="number"
-               name="quantity"
-               value="1"
-               min="1"
-               max="{{ product.stock }}"
-               class="w-28 border border-neutral-200 rounded-full px-5 py-3 outline-none">
-    </div>
+                        {% if product.fabric_type %}
+                            <div class="bg-[#f8f6f3] rounded-2xl p-5">
+                                <p class="text-sm text-neutral-500 mb-1">Kumaş</p>
+                                <p class="font-semibold">{{ product.fabric_type }}</p>
+                            </div>
+                        {% endif %}
 
-    <button type="submit"
-            class="bg-black text-white px-10 py-5 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300">
-        Sepete Ekle
-    </button>
-
-</form>
-
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'toggle_favorite' product.id %}"
-                               class="border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
-                                ♥ Favorilere Ekle
-                            </a>
-                        {% else %}
-                            <a href="{% url 'login' %}"
-                               class="border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
-                                Favori için giriş yap
-                            </a>
+                        {% if product.delivery_time %}
+                            <div class="bg-[#f8f6f3] rounded-2xl p-5">
+                                <p class="text-sm text-neutral-500 mb-1">Teslimat</p>
+                                <p class="font-semibold">{{ product.delivery_time }}</p>
+                            </div>
                         {% endif %}
 
                     </div>
 
-                {% else %}
+                    {% if product.features %}
+                        <section class="bg-white rounded-[2rem] border border-neutral-200 p-8 mb-8">
+                            <h2 class="text-2xl font-semibold mb-6 text-neutral-900">
+                                Ürün Özellikleri
+                            </h2>
 
+                            <div class="space-y-4 text-neutral-600 leading-8 text-[17px]">
+                                {% for line in product.features.splitlines %}
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-[#c6a46c] mt-1">●</span>
+                                        <p>{{ line }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+
+                    {% if product.technical_details %}
+                        <section class="bg-white rounded-[2rem] border border-neutral-200 p-8 mb-10">
+                            <h2 class="text-2xl font-semibold mb-6 text-neutral-900">
+                                Teknik Bilgiler
+                            </h2>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                {% for line in product.technical_details.splitlines %}
+                                    <div class="bg-[#f8f6f3] rounded-2xl px-6 py-5 text-neutral-700">
+                                        {{ line }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+
+                    <form method="POST"
+                          action="{% url 'add_to_cart' product.id %}"
+                          class="flex items-end gap-4 flex-wrap mb-6">
+
+                        {% csrf_token %}
+
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-700 mb-3">
+                                Adet
+                            </label>
+
+                            <input type="number"
+                                   name="quantity"
+                                   value="1"
+                                   min="1"
+                                   max="{{ product.stock }}"
+                                   class="w-28 border border-neutral-200 rounded-full px-5 py-3 outline-none">
+                        </div>
+
+                        <button type="submit"
+                                class="bg-black text-white px-10 py-5 rounded-full text-sm tracking-wide hover:bg-[#c6a46c] transition duration-300">
+                            Sepete Ekle
+                        </button>
+
+                    </form>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'toggle_favorite' product.id %}"
+                           class="inline-flex w-fit border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
+                            ♥ Favorilere Ekle
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}"
+                           class="inline-flex w-fit border border-neutral-300 px-8 py-4 rounded-full hover:border-[#c6a46c] hover:text-[#c6a46c] transition duration-300">
+                            Favori için giriş yap
+                        </a>
+                    {% endif %}
+
+                {% else %}
                     <p class="text-red-600">
                         Stokta yok
                     </p>
-
                 {% endif %}
 
             </div>
@@ -146,15 +207,11 @@
                 <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-neutral-100">
 
                     <div class="flex justify-between mb-3">
-
-                        <strong>
-                            {{ review.user.username }}
-                        </strong>
+                        <strong>{{ review.user.username }}</strong>
 
                         <span class="text-[#c6a46c]">
                             ★ {{ review.rating }}/5
                         </span>
-
                     </div>
 
                     <p class="text-neutral-600">

@@ -15,6 +15,11 @@ class ProductAdmin(admin.ModelAdmin):
         'is_active',
     )
 
+    list_editable = (
+        'stock',
+        'is_active',
+    )
+
     search_fields = (
         'name',
         'brand',
@@ -26,8 +31,53 @@ class ProductAdmin(admin.ModelAdmin):
         'category',
         'brand',
         'is_active',
+        'has_storage',
     )
 
+    fieldsets = (
+        ('Temel Bilgiler', {
+            'fields': (
+                'category',
+                'name',
+                'brand',
+                'price',
+                'description',
+                'image',
+                'external_image_url',
+                'stock',
+                'is_active',
+            )
+        }),
+        ('Tedarikçi Bilgileri', {
+            'fields': (
+                'sku',
+                'barcode',
+                'supplier_name',
+                'supplier_product_id',
+                'last_supplier_update',
+            )
+        }),
+        ('Mobilya / Ürün Detayları', {
+            'fields': (
+                'dimensions',
+                'material',
+                'fabric_type',
+                'color',
+                'warranty',
+                'delivery_time',
+                'has_storage',
+                'features',
+                'technical_details',
+            )
+        }),
+        ('Etiketler', {
+            'fields': (
+                'is_featured',
+                'is_new',
+                'discount_percent',
+            )
+        }),
+    )
 
 admin.site.register(Category)
 admin.site.register(Order)
