@@ -55,7 +55,7 @@
 
 <div class="relative hidden lg:block">
 
-    <div class="relative h-[380px] rounded-[28px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.14)] bg-white/40 backdrop-blur">
+    <div class="relative h-[380px] rounded-[28px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.14)]">
 
         <div id="heroSlider"
              class="flex h-full transition-transform duration-700 ease-in-out">
@@ -208,10 +208,10 @@
     <!-- PRODUCTS -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for product in products %}
-                <div class="relative bg-white rounded-[28px] overflow-hidden border border-neutral-100 shadow-[0_8px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.08)] transition duration-500 hover:-translate-y-1 group">
+                <div class="relative bg-[#fbf8f4] rounded-[32px] overflow-hidden border border-[#ece7df] shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.10)] transition duration-500 hover:-translate-y-2 group">
                     <div class="absolute top-0 left-0 w-0 h-[3px] bg-[#c6a46c] group-hover:w-full transition-all duration-500 z-30"></div>
 
-                    <div class="relative h-[360px] overflow-hidden bg-[#f4f1eb]">
+                    <div class="relative h-[380px] overflow-hidden bg-[#f6f1ea]">
                         {% if product.discount_percent > 0 %}
                             <div class="absolute top-5 left-5 z-20 bg-red-500 text-white text-xs px-4 py-2 rounded-full font-bold shadow-lg">
                                 %{{ product.discount_percent }} İNDİRİM
@@ -221,7 +221,7 @@
 
                         {% if product.image %}
                             <img src="{{ product.image.url }}"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                                 class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                         {% else %}
                             <div class="w-full h-full flex items-center justify-center bg-neutral-100 text-neutral-400 font-semibold">
                                 Ürün Görseli
@@ -244,7 +244,7 @@
                        
                     </div>
 
-                    <div class="p-6">
+                    <div class="p-7">
                         <h3 class="text-[20px] leading-snug font-semibold mb-3 text-neutral-900">
                             {{ product.name }}
                         </h3>
