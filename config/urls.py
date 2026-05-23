@@ -1,44 +1,402 @@
-from django.urls import path
-from . import views
+import resend
 
-urlpatterns = [
+from django.conf import settings
+from django.db.models import Avg
 
-    # HOME
-    path('', views.home, name='home'),
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
-    # AUTH
-    path('register/', views.register, name='register'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+from django.shortcuts import render, get_object_or_404, redirect
 
-    # PRODUCTS
-    path('product/<int:id>/', views.product_detail, name='product_detail'),
+from .models import Product, Category, Order, OrderItem, Review, Favorite
 
-    # CART
-    path('cart/', views.cart, name='cart'),
-    path('add-to-cart/<int:id>/', views.add_to_cart, name='add_to_cart'),
-    path('increase-cart/<int:id>/', views.increase_cart, name='increase_cart'),
-    path('decrease-cart/<int:id>/', views.decrease_cart, name='decrease_cart'),
-    path('remove-from-cart/<int:id>/', views.remove_from_cart, name='remove_from_cart'),
 
-    # CHECKOUT
-    path('checkout/', views.checkout, name='checkout'),
-    path('order-success/', views.order_success, name='order_success'),
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
 
-    # ORDERS
-    path('my-orders/', views.my_orders, name='my_orders'),
+        if not username or not email or not password1 or not password2:
+            return render(request, 'store/register.html', {
+                'error': 'Tüm alanları doldurun.'
+            })
 
-    # REVIEWS
-    path('add-review/<int:id>/', views.add_review, name='add_review'),
+        if password1 != password2:
+            return render(request, 'store/register.html', {
+                'error': 'Şifreler eşleşmiyor.'
+            })
 
-    # FAVORITES
-    path('toggle-favorite/<int:id>/', views.toggle_favorite, name='toggle_favorite'),
-    path('my-favorites/', views.my_favorites, name='my_favorites'),
+        if User.objects.filter(username=username).exists():
+            return render(request, 'store/register.html', {
+                'error': 'Bu kullanıcı adı zaten kullanılıyor.'
+            })
 
-    # DASHBOARD
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('add-product/', views.add_product, name='add_product'),
+        if User.objects.filter(email=email).exists():
+            return render(request, 'store/register.html', {
+                'error': 'Bu e-posta zaten kullanılıyor.'
+            })
 
-    # CONTACT
-    path('contact/', views.contact, name='contact'),
-]
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+
+        login(request, user)
+        return redirect('home')
+
+    return render(request, 'store/register.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+
+        return render(request, 'store/login.html', {
+            'error': 'Kullanıcı adı veya şifre hatalı.'
+        })
+
+    return render(request, 'store/login.html')
+
+
+def logout_view(request):
+    auth_logout(request)
+    return redirect('home')
+
+
+def home(request):
+    category_id = request.GET.get('category')
+    search_query = request.GET.get('q')
+
+    products = Product.objects.filter(is_active=True, price__gte=100)
+
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+
+    categories = Category.objects.all()
+    reviews = Review.objects.select_related('user', 'product').filter(rating__gte=4).order_by('-id')[:3]
+
+    cart = request.session.get('cart', {})
+    cart_count = sum(cart.values())
+
+    return render(request, 'store/home.html', {
+        'products': products,
+        'categories': categories,
+        'reviews': reviews,
+        'cart_count': cart_count,
+        'search_query': search_query,
+        'selected_category': category_id,
+    })
+
+
+def product_detail(request, id):
+    product = get_object_or_404(Product, id=id, is_active=True)
+    average_rating = product.reviews.aggregate(avg=Avg('rating'))['avg']
+
+    cart = request.session.get('cart', {})
+    cart_count = sum(cart.values())
+
+    return render(request, 'store/product_detail.html', {
+        'product': product,
+        'cart_count': cart_count,
+        'average_rating': average_rating,
+    })
+
+
+def add_to_cart(request, id):
+    cart = request.session.get('cart', {})
+    product_id = str(id)
+
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except ValueError:
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
+
+    cart[product_id] = cart.get(product_id, 0) + quantity
+    request.session['cart'] = cart
+
+    return redirect('cart')
+
+
+def cart(request):
+    cart = request.session.get('cart', {})
+    products = Product.objects.filter(id__in=cart.keys())
+
+    cart_items = []
+    total = 0
+
+    for product in products:
+        quantity = cart[str(product.id)]
+        subtotal = product.price * quantity
+        total += subtotal
+
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'subtotal': subtotal,
+        })
+
+    return render(request, 'store/cart.html', {
+        'cart_items': cart_items,
+        'total': total,
+    })
+
+
+@login_required(login_url='login')
+def checkout(request):
+    cart = request.session.get('cart', {})
+
+    if not cart:
+        return redirect('cart')
+
+    products = Product.objects.filter(id__in=cart.keys())
+
+    cart_items = []
+    total = 0
+
+    for product in products:
+        quantity = cart[str(product.id)]
+        subtotal = product.price * quantity
+        total += subtotal
+
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'subtotal': subtotal,
+        })
+
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        address = request.POST.get('address', '').strip()
+
+        order = Order.objects.create(
+            user=request.user,
+            full_name=full_name,
+            phone=phone,
+            address=address,
+            total_price=total,
+        )
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item['product'],
+                quantity=item['quantity'],
+                price=item['product'].price,
+            )
+
+        try:
+            resend.api_key = settings.RESEND_API_KEY
+
+            html_content = f"""
+            <h2>Yeni Sipariş Geldi</h2>
+
+            <p><strong>Sipariş No:</strong> #{order.id}</p>
+            <p><strong>Müşteri:</strong> {full_name}</p>
+            <p><strong>Telefon:</strong> {phone}</p>
+            <p><strong>Adres:</strong> {address}</p>
+
+            <hr>
+
+            <h3>Ürünler</h3>
+            <ul>
+            """
+
+            for item in cart_items:
+                html_content += f"""
+                <li>
+                    {item['product'].name}
+                    x {item['quantity']}
+                    = ₺{item['subtotal']}
+                </li>
+                """
+
+            html_content += f"""
+            </ul>
+
+            <hr>
+
+            <h2>Toplam: ₺{total}</h2>
+            """
+
+            resend.Emails.send({
+                "from": "Lares Home <onboarding@resend.dev>",
+                "to": "umut97068@gmail.com",
+                "subject": f"{order.id}. Sipariş Alındı | Lares Home",
+                "html": html_content,
+            })
+
+            print("RESEND MAIL GONDERILDI")
+
+        except Exception as e:
+            print("RESEND HATASI:", e)
+
+        request.session['cart'] = {}
+        return redirect('order_success')
+
+    return render(request, 'store/checkout.html', {
+        'cart_items': cart_items,
+        'total': total,
+    })
+
+
+def increase_cart(request, id):
+    cart = request.session.get('cart', {})
+    product_id = str(id)
+
+    if product_id in cart:
+        cart[product_id] += 1
+
+    request.session['cart'] = cart
+    return redirect('cart')
+
+
+def decrease_cart(request, id):
+    cart = request.session.get('cart', {})
+    product_id = str(id)
+
+    if product_id in cart:
+        cart[product_id] -= 1
+
+        if cart[product_id] <= 0:
+            del cart[product_id]
+
+    request.session['cart'] = cart
+    return redirect('cart')
+
+
+def remove_from_cart(request, id):
+    cart = request.session.get('cart', {})
+    product_id = str(id)
+
+    if product_id in cart:
+        del cart[product_id]
+
+    request.session['cart'] = cart
+    return redirect('cart')
+
+
+def order_success(request):
+    return render(request, 'store/order_success.html')
+
+
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'store/my_orders.html', {
+        'orders': orders,
+    })
+
+
+@login_required(login_url='login')
+def add_review(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+
+        Review.objects.create(
+            product=product,
+            user=request.user,
+            rating=rating,
+            comment=comment,
+        )
+
+    return redirect('product_detail', id=product.id)
+
+
+@login_required(login_url='login')
+def toggle_favorite(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    favorite = Favorite.objects.filter(
+        user=request.user,
+        product=product,
+    )
+
+    if favorite.exists():
+        favorite.delete()
+    else:
+        Favorite.objects.create(
+            user=request.user,
+            product=product,
+        )
+
+    return redirect('product_detail', id=product.id)
+
+
+@login_required(login_url='login')
+def my_favorites(request):
+    favorites = Favorite.objects.filter(user=request.user)
+
+    return render(request, 'store/my_favorites.html', {
+        'favorites': favorites,
+    })
+
+
+@staff_member_required
+def dashboard(request):
+    total_products = Product.objects.count()
+    total_orders = Order.objects.count()
+    total_users = User.objects.count()
+    total_revenue = sum(order.total_price for order in Order.objects.all())
+    latest_orders = Order.objects.order_by('-created_at')[:5]
+
+    return render(request, 'store/dashboard.html', {
+        'total_products': total_products,
+        'total_orders': total_orders,
+        'total_users': total_users,
+        'total_revenue': total_revenue,
+        'latest_orders': latest_orders,
+    })
+
+
+@staff_member_required
+def add_product(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        stock = request.POST.get('stock')
+        image = request.FILES.get('image')
+
+        category = Category.objects.first()
+
+        Product.objects.create(
+            category=category,
+            name=name,
+            price=price,
+            description=description,
+            stock=stock,
+            image=image,
+            is_active=True,
+        )
+
+        return redirect('home')
+
+    return render(request, 'store/add_product.html')
+
+
+def contact(request):
+    return render(request, 'store/contact.html')
