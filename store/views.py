@@ -148,6 +148,7 @@ def checkout(request):
             <p><strong>Müşteri:</strong> {full_name}</p>
             <p><strong>Telefon:</strong> {phone}</p>
             <p><strong>Adres:</strong> {address}</p>
+            <p><strong>Sipariş No:</strong> {order.id}</p>
 
             <hr>
 
@@ -173,9 +174,9 @@ def checkout(request):
             """
 
             resend.Emails.send({
-                "from": "onboarding@resend.dev",
+                "from": "Lares Home <onboarding@resend.dev>",
                 "to": "umut97068@gmail.com",
-                "subject": f"Yeni Sipariş - #{order.id}",
+                "subject": f"{order.id}. Sipariş Alındı | Lares Home",
                 "html": html_content,
             })
 
