@@ -2,13 +2,17 @@ import resend
 
 from django.conf import settings
 from django.db.models import Avg
+
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login, logout
 
 from .models import Product, Category, Order, OrderItem, Review, Favorite
+
 
 def register(request):
     if request.method == 'POST':
@@ -68,8 +72,9 @@ def login_view(request):
 
 
 def logout_view(request):
-    logout(request)
+    auth_logout(request)
     return redirect('home')
+
 
 def home(request):
     category_id = request.GET.get('category')
@@ -209,7 +214,6 @@ def checkout(request):
             <p><strong>Müşteri:</strong> {full_name}</p>
             <p><strong>Telefon:</strong> {phone}</p>
             <p><strong>Adres:</strong> {address}</p>
-            <p><strong>Sipariş No:</strong> {order.id}</p>
 
             <hr>
 
